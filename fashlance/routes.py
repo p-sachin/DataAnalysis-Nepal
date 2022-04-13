@@ -9,7 +9,7 @@ def index():
 
 @app.route('/technologies')
 def technologies():
-    df = get_data('SP.POP.TOTL', 'NPL')
+    df = get_data('SP.POP.TOTL', 'IND')
     return render_template('technologies.html', year=df['year'].tolist(), val=df['values'].tolist())
 
 
