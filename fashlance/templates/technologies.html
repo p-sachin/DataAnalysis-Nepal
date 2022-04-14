@@ -87,6 +87,11 @@ hr {
     padding-top: 10px;
 }
 
+.chart {
+    width: 70%;
+    margin: auto;
+}
+
 </style>
     
 <header class="header-content">
@@ -123,6 +128,8 @@ hr {
      </div>
    </div>
  </section>
+
+
 
  <!-- Contact Section Starts -->
 <section id="contact" class="p_80" data-scroll-index="3">
@@ -200,12 +207,91 @@ hr {
         </div>
         </div>
         </section>
-        <div class="chart-container">
+        <div class="chart">
             <canvas id="myChart"></canvas>
         </div>
-
 
   <!-- Footer Section Starts -->
   {{footer()}}
   <!-- Footer Section Ends -->
+
+  <!-- <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+   var myChart = new Chart(ctx, {
+       type: 'bar',
+       data: {
+        labels : [{% for item in year %} {{item}}, {% endfor %}],
+         datasets: [{ 
+             data: [{% for item in val %} {{item}}, {% endfor %}],
+             label: "Total",
+             borderColor: "#3e95cd",
+             backgroundColor: "#7bb6dd",
+             fill: false,
+           }
+         ]
+       }
+       
+     });
+ </script> -->
+
+ <script>
+    const ctx = document.getElementById('myChart').getContext("2d");
+
+    // Gradient Fill
+    
+    let gradient = ctx.createLinearGradient(0,0,0,400);
+    gradient.addColorStop(0, 'rgba(58,123,213,1');
+    gradient.addColorStop(1, 'rgba(0,210,255,0.3');
+    
+    const labels = [{% for item in year %} {{item}}, {% endfor %}];
+
+    const data = {
+      labels,
+      datasets: [{
+        data: [{% for item in val %} {{item}}, {% endfor %}],
+        label: "Total Population",
+        fill: true,
+        backgroundColor: gradient,
+        pointBackgroundColor: "rgb(189, 195, 199)",
+      },
+    ],
+    };
+    
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        radius: 5,
+        hitRadius: 30,
+        responsive: true,
+        scales: {
+    
+          x: {
+            title: {
+              display: true,
+              text: 'X axis title'
+            }
+            },
+    
+          y: {
+            title: {
+              display: true,
+              text: 'Y axis title'
+            },
+            ticks: {
+              callback: function (value) {
+                return value + "m";
+              },
+            },
+          },
+      },
+    },
+    };
+    
+    const myChart = new Chart(ctx, config);
+ </script>
+
+
 {% endblock %}
+
+
