@@ -6,6 +6,86 @@ Welcome - Fashlance, A Product Recommender
 
 {% block content %}
 
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body{
+  background: #644bff;
+  padding: 0 20px;
+}
+::selection{
+  color: #fff;
+  background: #664AFF;
+}
+.wrapper{
+  max-width: 450px;
+  margin: 150px auto;
+}
+.wrapper .search-input{
+  background: #fff;
+  width: 100%;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12);
+}
+.search-input input{
+  height: 55px;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 0 60px 0 20px;
+  font-size: 18px;
+  box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
+}
+.search-input.active input{
+  border-radius: 5px 5px 0 0;
+}
+.search-input .autocom-box{
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.search-input.active .autocom-box{
+  padding: 10px 8px;
+  opacity: 1;
+  pointer-events: auto;
+}
+.autocom-box li{
+  list-style: none;
+  padding: 8px 12px;
+  display: none;
+  width: 100%;
+  cursor: default;
+  border-radius: 3px;
+}
+.search-input.active .autocom-box li{
+  display: block;
+}
+.autocom-box li:hover{
+  background: #efefef;
+}
+.search-input .icon{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 55px;
+  width: 55px;
+  text-align: center;
+  line-height: 55px;
+  font-size: 20px;
+  color: #644bff;
+  cursor: pointer;
+}
+</style>
+
 <header class="header-content">
   <nav class="navbar navbar-expand-lg navbar-expand-md navbar-expand-sm navbar-light">
      <div class="container">
@@ -29,32 +109,71 @@ Welcome - Fashlance, A Product Recommender
 </header>
 
 <!-- Home Content Starts -->
-<section id="home-content" style="background: url(../static/img/hero-1.jpg); background-size: cover; background-position: 25% 75%;" data-scroll-index="0">
-  <div class="container">
-      <div class="row">
-          <div class="col-lg-7 offset-lg-1 col-md-7">
-      <div class="home-text">
-          <div class="home-text-inner">
-          <h3>Hello</h3>
-          <h1>Welcome to</h1>
-          <h1 class="cd-headline clip">
-          <span class="cd-words-wrapper">
-              <b class="is-visible">Fashlance.</b>
-              <b>Product Recommender</b>
-          </span>
-      </h1>
-          <p>
-          To use this web app please click the button down below.
-          </p>
-          <a href="#" class="btn btn-primary hire-me">See Products</a>
-        </div>
+<form action = "/technologies" method = "POST" 
+            enctype = "multipart/form-data" id="contactForm" class="row form-contact">
+<div class="wrapper">
+  <div class="search-input">
+    <input type="text" placeholder="Type to search.." name="name">
+    <div class="autocom-box">
+      <!-- here list are inserted from javascript -->
     </div>
-    </div>
-    </div>
+    <div class="icon"><i class="fas fa-search"></i></div>
   </div>
-</section>
+</div>
+</form>
 <!-- Home Section Ends -->
 
+<script>
+
+  let suggestions = {{ countries|tojson }};
+    
+
+  // getting all required elements
+const searchWrapper = document.querySelector(".search-input");
+const inputBox = searchWrapper.querySelector("input");
+const suggBox = searchWrapper.querySelector(".autocom-box");
+let webLink;
+// if user press any key and release
+inputBox.onkeyup = (e)=>{
+    let userData = e.target.value; //user enetered data
+    let emptyArray = [];
+    if(userData){
+        emptyArray = suggestions.filter((data)=>{
+            //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
+            return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+        });
+        emptyArray = emptyArray.map((data)=>{
+            // passing return data inside li tag
+            return data = `<li>${data}</li>`;
+        });
+        searchWrapper.classList.add("active"); //show autocomplete box
+        showSuggestions(emptyArray);
+        let allList = suggBox.querySelectorAll("li");
+        for (let i = 0; i < allList.length; i++) {
+            //adding onclick attribute in all li tag
+            allList[i].setAttribute("onclick", "select(this)");
+        }
+    }else{
+        searchWrapper.classList.remove("active"); //hide autocomplete box
+    }
+}
+function select(element){
+    let selectData = element.textContent;
+    inputBox.value = selectData;
+    searchWrapper.classList.remove("active");
+}
+function showSuggestions(list){
+    let listData;
+    if(!list.length){
+        userValue = inputBox.value;
+        listData = `<li>${userValue}</li>`;
+    }else{
+      listData = list.join('');
+    }
+    suggBox.innerHTML = listData;
+}
+
+</script>
 
 {% endblock %}
 

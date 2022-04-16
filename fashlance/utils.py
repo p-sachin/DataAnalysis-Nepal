@@ -17,5 +17,11 @@ def get_data(indicator, country):
     
     return sorted_df
 
+def all_nations():
+    countries = wbdata.search_countries('')
+    df = pd.DataFrame(countries)
+    df.drop(['iso2Code', 'incomeLevel', 'lendingType', 'region', 'adminregion'], axis=1, inplace=True)
+    return df
+
 
 
