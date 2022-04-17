@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request
-from fashlance import app, db
+from fashlance import app
 from fashlance.utils import *
 
 
