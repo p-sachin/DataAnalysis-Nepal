@@ -1,4 +1,5 @@
-from flask import render_template, redirect, request
+from email.policy import default
+from flask import render_template, redirect, request, session
 from fashlance import app
 from fashlance.utils import *
 
@@ -11,15 +12,29 @@ def index():
 
 @app.route('/technologies', methods=['GET', 'POST'])
 def technologies():
-    if request.method == 'POST':
-        name = request.form.get('name')
+        name = session.get("keyword", None)
+      #  print(name)
         countries = all_nations()
         for x, y in zip(countries['id'], countries['name']):
-            if y == name:
-                df = get_data('SP.DYN.LE00.IN', x)
-                df = df.dropna()
+            df, _ = get_data(x)
                 
         return render_template('technologies.html', year=df['year'].tolist(), val=df['values'].tolist())
+
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    name = request.form.get('name')
+    print(name)
+    session["keyword"] = name
+    countries = all_nations()
+    for x, y in zip(countries['id'], countries['name']):
+            if y == name:
+                _, get_title = get_data(x)
+
+    return render_template('dashboard.html', titles=get_title)
+
+
+    
 
 
 
