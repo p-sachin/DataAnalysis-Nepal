@@ -16,7 +16,8 @@ def technologies():
         countries = all_nations()
         for x, y in zip(countries['id'], countries['name']):
             if y == name:
-                df = get_data('SP.POP.TOTL', x)
+                df = get_data('SP.DYN.LE00.IN', x)
+                df = df.dropna()
                 
         return render_template('technologies.html', year=df['year'].tolist(), val=df['values'].tolist())
 
