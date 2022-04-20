@@ -113,9 +113,15 @@ body{
 
 <div class="container">
     <ul style="margin-top: 200px;">
-        {% for item in titles %}
-        <a href="{{url_for('technologies')}}"><li>{{item}}</li></a>
-        {% endfor %}
+        <li>Country: {{nation_info.name}}</li>
+        <li>Capital: {{nation_info.capitalCity}}</li>
+        <li>Longitude: {{nation_info.longitude}}</li>
+        <li>Latitude: {{nation_info.latitude}}</li>
+    </ul>
+    <ul>
+      {% for item in title %}
+      <li>{{item}} of<span> {{nation_info.name}}</span></li>
+      {% endfor %}
     </ul>
 </div>
 {% endblock %}
