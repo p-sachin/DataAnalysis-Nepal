@@ -43,7 +43,6 @@ def tech(indicator_id):
 def dashboard():
     if request.method == 'POST':
         name = request.form.get('keyword')
-        name = name.capitalize()
         nation_info = db.session.query(Countries).filter(Countries.name == name).first()
         abbr = nation_info.id
         ind_title = get_indicators(abbr)
