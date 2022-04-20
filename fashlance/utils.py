@@ -1,5 +1,6 @@
 import wbdata
 import pandas as pd
+import datetime
 
 def get_indicators(abbr):
     indicators = ['SP.POP.TOTL', 'SP.DYN.LE00.IN', 
@@ -34,6 +35,24 @@ def all_nations():
     df = df.reset_index()
     df.drop(['index'], inplace=True, axis=1)
     return df
+
+def get_data(indicator, country):
+    date_date = datetime.datetime(2010, 1, 1), datetime.datetime(2022, 1, 1)
+    data = wbdata.get_data(indicator, country=country, data_date=date_date)
+    df = pd.DataFrame()
+    year = []
+    values = []
+    for item in data:
+        year.append(item['date'])
+        values.append(item['value'])
+    df['year'] = year
+    df['values'] = values
+    sorted_df = df.sort_values(by=['year'], ascending=True)
+    sorted_df = sorted_df.dropna()
+    print(sorted_df)
+    year = sorted_df['year'].tolist()
+    values = sorted_df['values']
+    return year,values
 
 
 

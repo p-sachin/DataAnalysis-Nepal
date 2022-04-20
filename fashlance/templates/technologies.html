@@ -131,7 +131,6 @@ hr {
 
  <h1>{{list_country.title}}</h1>
 
-
  <!-- Contact Section Starts -->
 <section id="contact" class="p_80" data-scroll-index="3">
 	<div class="container">
@@ -216,25 +215,6 @@ hr {
   <!-- Footer Section Starts -->
   {{footer()}}
   <!-- Footer Section Ends -->
-
-  <!-- <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-   var myChart = new Chart(ctx, {
-       type: 'bar',
-       data: {
-        labels : [{% for item in year %} {{item}}, {% endfor %}],
-         datasets: [{ 
-             data: [{% for item in val %} {{item}}, {% endfor %}],
-             label: "Total",
-             borderColor: "#3e95cd",
-             backgroundColor: "#7bb6dd",
-             fill: false,
-           }
-         ]
-       }
-       
-     });
- </script> -->
 
  <script>
     const ctx = document.getElementById('myChart').getContext("2d");

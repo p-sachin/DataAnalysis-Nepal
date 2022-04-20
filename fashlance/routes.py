@@ -35,13 +35,15 @@ def index():
 @app.route('/tech/<indicator_id>', methods=['GET', 'POST'])
 def tech(indicator_id):
     list_country=db.session.query(Indicators).filter(Indicators.indicator_id==indicator_id).first()
-    print(list_country)
-    return render_template('technologies.html', list_country=list_country)
+    year, values = get_data(list_country.indicator_id, list_country.country)
+
+    return render_template('technologies.html', list_country=list_country, year=year, val=values)
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if request.method == 'POST':
         name = request.form.get('keyword')
+        name = name.capitalize()
         nation_info = db.session.query(Countries).filter(Countries.name == name).first()
         abbr = nation_info.id
         ind_title = get_indicators(abbr)
@@ -49,7 +51,7 @@ def dashboard():
         print(ind_title)
 
         db.session.query(Indicators).delete()
-        
+
         for item in ind_title:
             indicators2database = Indicators(
                 indicator_id=item['indicator_id'],
