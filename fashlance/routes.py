@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request
 from fashlance import app, db
 from fashlance.models import Countries, Indicators
 from fashlance.utils import *
@@ -32,29 +32,35 @@ def index():
         return render_template('index.html', countries=list_countries)
 
 
-
-@app.route('/technologies', methods=['GET', 'POST'])
-def technologies():
-    return render_template('technologies.html')
+@app.route('/tech/<indicator_id>', methods=['GET', 'POST'])
+def tech(indicator_id):
+    list_country=db.session.query(Indicators).filter(Indicators.indicator_id==indicator_id).first()
+    print(list_country)
+    return render_template('technologies.html', list_country=list_country)
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if request.method == 'POST':
         name = request.form.get('keyword')
         nation_info = db.session.query(Countries).filter(Countries.name == name).first()
-        indicators=get_indicators()
+        abbr = nation_info.id
+        ind_title = get_indicators(abbr)
+        ind_title = [dict(v) for _, v in ind_title.iterrows()]
+        print(ind_title)
 
-        title = []
+        db.session.query(Indicators).delete()
+        
+        for item in ind_title:
+            indicators2database = Indicators(
+                indicator_id=item['indicator_id'],
+                title=item['title'],
+                country=item['country']
+        )
+            db.session.add(indicators2database)
 
-        for values in indicators:
-            data = wbdata.get_data(values, country=nation_info.id)
-            my_dict = data[0]
-            values_view = my_dict.values()
-            value_iterator = iter(values_view)
-            first_value = next(value_iterator)
-            title.append(first_value['value'])
+        db.session.commit()
 
-        print(title)
+        list_sectors = db.session.query(Indicators).all()
 
-        return render_template('dashboard.html', nation_info=nation_info, title=title)
+        return render_template('dashboard.html', nation_info=nation_info, list_title=list_sectors)
     

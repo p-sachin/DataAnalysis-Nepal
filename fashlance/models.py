@@ -17,3 +17,6 @@ class Countries(db.Model):
 
 class Indicators(db.Model):
     indicator_id = db.Column(db.String(128),primary_key=True,nullable=False)
+    title = db.Column(db.String(20), nullable=False)
+    country = db.Column(db.String(20), nullable=False)
+
